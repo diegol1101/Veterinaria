@@ -4,7 +4,7 @@ using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.AspNetCore.Authorization;
 namespace API.Controllers;
 
     public class EspecieController : ApiBaseController
@@ -43,6 +43,7 @@ namespace API.Controllers;
         return this.mapper.Map<EspecieDto>(especie);
     }
 
+    [Authorize(Roles = "Administrador")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

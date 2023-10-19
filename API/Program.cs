@@ -51,8 +51,8 @@ using (var scope = app.Services.CreateScope())
 	{
 		var context = services.GetRequiredService<VeterinariaContext>();
 		await context.Database.MigrateAsync();
-		/* await ApiContextSeed.SeedRolesAsync(context,loggerFactory);
-		await ApiContextSeed.SeedAsync(context,loggerFactory); */
+		await APIContextSeeder.SeedRolesAsync(context,loggerFactory);
+		await APIContextSeeder.SeedAsync(context,loggerFactory); 
 	}
 	catch (Exception ex)
 	{

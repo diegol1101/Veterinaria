@@ -3,6 +3,7 @@ using API.Dtos;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -42,7 +43,8 @@ namespace API.Controllers;
         }
         return this.mapper.Map<CitaDto>(cita);
     }
-
+    
+    
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -1,100 +1,64 @@
 
 
 
-
 using API.Dtos;
-using AutoMapper;
-using Domain.Entities;
+using API.Services;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-    public class UserController : ApiBaseController
+
+public class UserController : ApiBaseController
 {
-    private readonly IUnitOfWork unitofwork;
-    private readonly IMapper mapper;
+    private readonly IUserService _userService;
 
-    public UserController(IUnitOfWork unitofwork, IMapper mapper)
+    public UserController(IUserService userService)
     {
-        this.unitofwork = unitofwork;
-        this.mapper = mapper;
+        _userService = userService;
+    }
+    [HttpPost("register")]
+    public async Task<ActionResult> RegisterAsync(RegisterDto model)
+    {
+        var result = await _userService.RegisterAsync(model);
+        return Ok(result);
     }
 
-    [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-
-    public async Task<ActionResult<IEnumerable<UserDto>>> Get()
+    [HttpPost("token")]
+    public async Task<IActionResult> GetTokenAsync(LoginDto model)
     {
-        var user = await unitofwork.Users.GetAllAsync();
-        return mapper.Map<List<UserDto>>(user);
+        var result = await _userService.GetTokenAsync(model);
+        SetRefreshTokenInCookie(result.RefreshToken);
+        return Ok(result);
     }
 
-    [HttpGet("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-
-    public async Task<ActionResult<UserDto>> Get(int id)
+    [HttpPost("addrole")]
+    public async Task<IActionResult> AddRoleAsync(AddRoleDto model)
     {
-        var user = await unitofwork.Users.GetByIdAsync(id);
-        if (user == null)
+        var result = await _userService.AddRoleAsync(model);
+        return Ok(result);
+    }
+
+    [HttpPost("refresh-token")]
+    public async Task<IActionResult> RefreshToken([FromBody] RefresTokenDto ss)
+    {
+        string RefrestToken = ss.refresToken;
+        Console.WriteLine(ss);
+        var response = await _userService.RefreshTokenAsync(RefrestToken);
+        if (!string.IsNullOrEmpty(response.RefreshToken))
+            SetRefreshTokenInCookie(response.RefreshToken);
+        return Ok(response);
+    }
+
+
+    private void SetRefreshTokenInCookie(string refreshToken)
+    {
+        var cookieOptions = new CookieOptions
         {
-            return NotFound();
-        }
-        return this.mapper.Map<UserDto>(user);
+            HttpOnly = true,
+            Expires = DateTime.UtcNow.AddDays(10),
+        };
+        Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
     }
 
-    [HttpPost]
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-
-    public async Task<ActionResult<User>> Post(UserDto userDto)
-    {
-        var user = this.mapper.Map<User>(userDto);
-        this.unitofwork.Users.Add(user);
-        await unitofwork.SaveAsync();
-        if (user == null)
-        {
-            return BadRequest();
-        }
-        userDto.Id = user.Id;
-        return CreatedAtAction(nameof(Post), new { id = userDto.Id }, userDto);
-    }
-
-    [HttpPut("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-
-    public async Task<ActionResult<UserDto>> Put(int id, [FromBody] UserDto userDto)
-    {
-        if (userDto == null)
-        {
-            return NotFound();
-        }
-        var user = this.mapper.Map<User>(userDto);
-        unitofwork.Users.Update(user);
-        await unitofwork.SaveAsync();
-        return userDto;
-    }
-
-    [HttpDelete("{id}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-
-    public async Task<IActionResult> Delete(int id)
-    {
-        var user = await unitofwork.Users.GetByIdAsync(id);
-        if (user == null)
-        {
-            return NotFound();
-        }
-        unitofwork.Users.Remove(user);
-        await unitofwork.SaveAsync();
-        return NoContent();
-    }
-    
-        
-    }
+}

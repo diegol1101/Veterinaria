@@ -1,0 +1,2 @@
+Id,Nombre,Stock,Precio,Laboratorio,ProveedorIdFk
+1,acetaminofen,50,1000,Genfar,1
