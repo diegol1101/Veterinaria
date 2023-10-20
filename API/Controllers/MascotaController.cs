@@ -1,6 +1,7 @@
 
 
 using API.Dtos;
+using API.Helpers.Errors;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
@@ -8,8 +9,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
-[Authorize]
-
+[ApiVersion("1.0")]
+[ApiVersion("1.1")]
+/* [Authorize]
+ */
     public class MascotaController : ApiBaseController
 {
     private readonly IUnitOfWork unitofwork;
@@ -45,7 +48,16 @@ namespace API.Controllers;
         }
         return this.mapper.Map<MascotaDto>(mascota);
     }
-
+    [HttpGet]
+    [MapToApiVersion("1.1")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Pager<MascotaDto>>> GetPagination([FromQuery] Params paisParams)
+    {
+        var entidad = await unitofwork.Mascotas.GetAllAsync(paisParams.PageIndex, paisParams.PageSize, paisParams.Search);
+        var listEntidad = mapper.Map<List<MascotaDto>>(entidad.registros);
+        return new Pager<MascotaDto>(listEntidad, entidad.totalRegistros, paisParams.PageIndex, paisParams.PageSize, paisParams.Search);
+    }
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -109,7 +121,6 @@ namespace API.Controllers;
     [HttpGet("MascotaPropietario")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-
     public async Task<ActionResult<IEnumerable<MascotaPropietarioDto>>> GetMascotaPopietario()
     {
         var mascota = await unitofwork.Mascotas.GetMascotaPopietario();
@@ -142,6 +153,16 @@ namespace API.Controllers;
         var entidad = await unitofwork.Mascotas.mascotasXveterinario();
         var dto = mapper.Map<IEnumerable<object>>(entidad);
         return Ok(dto);
+    }
+    [HttpGet("mascotasXveterinario")]
+    [MapToApiVersion("1.1")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Pager<object>>> mascotasXveterinario([FromQuery] Params paisParams)
+    {
+        var entidad = await unitofwork.Mascotas.mascotasXveterinario(paisParams.PageIndex, paisParams.PageSize, paisParams.Search);
+        var listEntidad = mapper.Map<List<object>>(entidad.registros);
+        return new Pager<object>(listEntidad, entidad.totalRegistros, paisParams.PageIndex, paisParams.PageSize, paisParams.Search);
     }
     [HttpGet("mascotasXraza")]
     [ProducesResponseType(StatusCodes.Status200OK)]

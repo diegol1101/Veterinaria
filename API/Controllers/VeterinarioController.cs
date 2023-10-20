@@ -3,6 +3,7 @@
 
 
 using API.Dtos;
+using API.Helpers.Errors;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
@@ -10,6 +11,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
+[ApiVersion("1.0")]
+[ApiVersion("1.1")]
 [Authorize]
 
     public class VeterinarioController : ApiBaseController
@@ -47,7 +50,16 @@ namespace API.Controllers;
         }
         return this.mapper.Map<VeterinarioDto>(veterinario);
     }
-
+    [HttpGet]
+    [MapToApiVersion("1.1")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Pager<VeterinarioDto>>> GetPagination([FromQuery] Params paisParams)
+    {
+        var entidad = await unitofwork.Veterinarios.GetAllAsync(paisParams.PageIndex, paisParams.PageSize, paisParams.Search);
+        var listEntidad = mapper.Map<List<VeterinarioDto>>(entidad.registros);
+        return new Pager<VeterinarioDto>(listEntidad, entidad.totalRegistros, paisParams.PageIndex, paisParams.PageSize, paisParams.Search);
+    }
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

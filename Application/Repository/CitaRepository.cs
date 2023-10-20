@@ -33,4 +33,24 @@ namespace Application.Repository;
         .Include(p => p.Mascota)
         .FirstOrDefaultAsync(p =>  p.Id == id);
     }
+    public override async Task<(int totalRegistros, IEnumerable<Cita> registros)> GetAllAsync(int pageIndex, int pageSize, string search)
+    {
+        var query = _context.Citas as IQueryable<Cita>;
+
+        if(!string.IsNullOrEmpty(search))
+        {
+            query = query.Where(p => p.Motivo.ToLower().Contains(search));
+        }
+
+        query = query.OrderBy(p => p.Id);
+        var totalRegistros = await query.CountAsync();
+        var registros = await query
+            .Include(p=>p.Veterinario)
+            .Include(p => p.Mascota)
+            .Skip((pageIndex - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (totalRegistros, registros);
+    }
 }

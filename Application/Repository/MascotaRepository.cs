@@ -44,6 +44,7 @@ namespace Application.Repository;
 
                     return Especies;
     }
+    
 
     public async Task<IEnumerable<Mascota>> GetMascotaPopietario()
     {
@@ -108,6 +109,38 @@ namespace Application.Repository;
         var MascotaEspecie = await consulta.ToListAsync();
         return MascotaEspecie;
     }
+    public virtual async Task<(int totalRegistros,object registros)> mascotasXveterinario(int pageIndez, int pageSize, string search)
+    {
+        var query = 
+        from e in _context.Citas 
+        join v in _context.Veterinarios on e.VeterinarioIdFk equals v.Id
+        select new
+        {
+            Veterinario = v.Nombre,
+            Mascotas = (from c in _context.Citas 
+                        join m in _context.Mascotas on c.MascotaIdFk equals m.Id
+                        where c.VeterinarioIdFk == v.Id
+                        select new
+                        {
+                            NombreMascota = m.Nombre,
+                            FechaNacimiento = m.Nacimiento,
+                        }).ToList()
+        };
+        
+        if(!string.IsNullOrEmpty(search))
+        {
+            query = query.Where(p => p.Veterinario.ToLower().Contains(search));
+        }
+
+        query = query.OrderBy(p => p.Veterinario);
+        var totalRegistros = await query.CountAsync();
+        var registros = await query 
+            .Skip((pageIndez - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (totalRegistros, registros);
+    }
     public virtual async Task<object> mascotasXraza()
     {
         var consulta =
@@ -120,5 +153,25 @@ namespace Application.Repository;
 
         var MascotasPorRaza = await consulta.ToListAsync();
         return MascotasPorRaza;
+    }
+    public override async Task<(int totalRegistros, IEnumerable<Mascota> registros)> GetAllAsync(int pageIndez, int pageSize, string search)
+    {
+        var query = _context.Mascotas as IQueryable<Mascota>;
+
+        if(!string.IsNullOrEmpty(search))
+        {
+            query = query.Where(p => p.Nombre.ToLower().Contains(search));
+        }
+
+        query = query.OrderBy(p => p.Id);
+        var totalRegistros = await query.CountAsync();
+        var registros = await query 
+            .Include(p=>p.Raza)
+            .ThenInclude(p=>p.Especie)
+            .Skip((pageIndez - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (totalRegistros, registros);
     }
 }

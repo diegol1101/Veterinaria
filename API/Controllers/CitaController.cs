@@ -1,5 +1,6 @@
 
 using API.Dtos;
+using API.Helpers.Errors;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
@@ -7,6 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
+[ApiVersion("1.0")]
+[ApiVersion("1.1")]
 [Authorize]
 
     public class CitaController : ApiBaseController
@@ -21,6 +24,7 @@ namespace API.Controllers;
     }
 
     [HttpGet]
+    [MapToApiVersion("1.0")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
@@ -44,7 +48,16 @@ namespace API.Controllers;
         }
         return this.mapper.Map<CitaDto>(cita);
     }
-    
+     [HttpGet]
+    [MapToApiVersion("1.1")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Pager<CitaDto>>> GetPagination([FromQuery] Params paisParams)
+    {
+        var entidad = await unitofwork.Citas.GetAllAsync(paisParams.PageIndex, paisParams.PageSize, paisParams.Search);
+        var listEntidad = mapper.Map<List<CitaDto>>(entidad.registros);
+        return new Pager<CitaDto>(listEntidad, entidad.totalRegistros, paisParams.PageIndex, paisParams.PageSize, paisParams.Search);
+    }
     
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]

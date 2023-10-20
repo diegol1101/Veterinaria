@@ -13,5 +13,6 @@ namespace Domain.Interfaces;
         Task<IEnumerable<Mascota>> GetMascotaTrimMotivoAnio(int trim, string Motivo, int anio);
         Task<object> mascotaXEspecie();
         Task<object> mascotasXveterinario();
+        Task<(int totalRegistros,object registros)> mascotasXveterinario(int pageIndez, int pageSize, string search);
         Task<object> mascotasXraza();
     }

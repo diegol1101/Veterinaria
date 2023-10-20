@@ -47,4 +47,23 @@ namespace Application.Repository;
 
                     return Precio;
     }
+    public override async Task<(int totalRegistros, IEnumerable<Medicina> registros)> GetAllAsync(int pageIndez, int pageSize, string search)
+    {
+        var query = _context.Medicinas as IQueryable<Medicina>;
+
+        if(!string.IsNullOrEmpty(search))
+        {
+            query = query.Where(p => p.Nombre.ToLower().Contains(search));
+        }
+
+        query = query.OrderBy(p => p.Id);
+        var totalRegistros = await query.CountAsync();
+        var registros = await query 
+        .Include(p=>p.Proveedor)
+            .Skip((pageIndez - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (totalRegistros, registros);
+    }
 }

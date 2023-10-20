@@ -45,4 +45,24 @@ namespace Application.Repository;
 
         return Movimiento;
     }
+    public override async Task<(int totalRegistros, IEnumerable<CompraMedicamento> registros)> GetAllAsync(int pageIndez, int pageSize, string search)
+    {
+        var query = _context.Especies as IQueryable<CompraMedicamento>;
+
+        if(!string.IsNullOrEmpty(search))
+        {
+            query = query.Where(p => p.Precio.ToString().ToLower().Contains(search));
+        }
+
+        query = query.OrderBy(p => p.Id);
+        var totalRegistros = await query.CountAsync();
+        var registros = await query 
+            .Include(p=>p.Medicina)
+            .Skip((pageIndez - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+
+        return (totalRegistros, registros);
+    }
 }
