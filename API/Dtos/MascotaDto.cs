@@ -13,3 +13,15 @@ namespace API.Dtos;
         public int PropietarioIdFk {get; set;}
         public int RazaIdFk {get; set;}
     }
+
+    public class MascotaEspecieDto
+    {
+        public string Nombre {get; set;}
+        public string Especie {get; set;}
+    }
+
+    public class MascotaPropietarioDto
+    {
+        public string Nombre {get; set;}
+        public string Propietario {get; set;}
+    }

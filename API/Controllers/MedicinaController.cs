@@ -95,6 +95,25 @@ namespace API.Controllers;
         await unitofwork.SaveAsync();
         return NoContent();
     }
+
+    [HttpGet("medicamentolab")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
+    public async Task<ActionResult<IEnumerable<MedicinaLabDto>>> Getmedicamentolab()
+    {
+        var medicina = await unitofwork.Medicinas.Getmedicamentolab();
+        return mapper.Map<List<MedicinaLabDto>>(medicina);
+    }
     
-        
+    [HttpGet("GetMedicinaPrecio")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
+    public async Task<ActionResult<IEnumerable<MedicinaPrecioDto>>> GetMedicinaPrecio()
+    {
+        var medicina = await unitofwork.Medicinas.GetMedicinaPrecio();
+        return mapper.Map<List<MedicinaPrecioDto>>(medicina);
+    }
+    
     }

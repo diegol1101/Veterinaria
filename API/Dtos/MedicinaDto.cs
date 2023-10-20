@@ -14,3 +14,17 @@ namespace API.Dtos;
         public string Laboratorio {get; set;}
         public int ProveedorIdFk {get; set;}
     }
+
+    public class MedicinaLabDto
+    {
+        public string Nombre {get; set;}
+        public string Laboratorio {get; set;}
+        public string Proveedor {get; set;}
+
+    }
+
+    public class MedicinaPrecioDto
+    {
+        public string Nombre {get; set;}
+        public decimal Precio {get; set;}
+    }

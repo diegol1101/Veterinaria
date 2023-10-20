@@ -96,5 +96,13 @@ namespace API.Controllers;
         return NoContent();
     }
     
-        
+    [HttpGet("veterinarioespecialidad")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
+    public async Task<ActionResult<IEnumerable<VeterinarioDto>>> GetEspecialidad()
+    {
+        var veterinario = await unitofwork.Veterinarios.GetEspecialidad();
+        return mapper.Map<List<VeterinarioDto>>(veterinario);
+    }
     }

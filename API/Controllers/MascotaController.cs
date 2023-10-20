@@ -94,5 +94,24 @@ namespace API.Controllers;
         return NoContent();
     }
     
-        
+    [HttpGet("especies")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
+    public async Task<ActionResult<IEnumerable<MascotaEspecieDto>>> GetMascotaEspecie()
+    {
+        var mascota = await unitofwork.Mascotas.GetMascotaEspecie();
+        return mapper.Map<List<MascotaEspecieDto>>(mascota);
+    }
+    
+    [HttpGet("MascotaPropietario")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
+    public async Task<ActionResult<IEnumerable<MascotaPropietarioDto>>> GetMascotaPopietario()
+    {
+        var mascota = await unitofwork.Mascotas.GetMascotaPopietario();
+        return mapper.Map<List<MascotaPropietarioDto>>(mascota);
+    }
+    
     }

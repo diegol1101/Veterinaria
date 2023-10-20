@@ -11,6 +11,5 @@ namespace API.Dtos;
         public int Cantidad {get; set;}
         public decimal Precio {get; set;}
         public DateTime Fecha {get; set;}
-        public int ProveedorIdFk {get; set;}
         public int MedicinaIdFk {get; set;}
     }
