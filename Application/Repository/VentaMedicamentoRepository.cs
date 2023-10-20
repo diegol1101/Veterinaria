@@ -31,5 +31,18 @@ namespace Application.Repository;
         .Include(p=>p.Medicina)
         .FirstOrDefaultAsync(p =>  p.Id == id);
     }
-    
+    public async Task<object> movimientoVenta()
+    {
+        
+        var Movimiento = await (
+            from d in _context.VentaMedicamentos
+            
+            select new{
+                IdVenta = d.Id,
+                total = d.Precio * d.Cantidad,
+            }).Distinct()
+            .ToListAsync();
+
+        return Movimiento;
+    }
 }

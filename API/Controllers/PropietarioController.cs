@@ -5,9 +5,11 @@ using API.Dtos;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
+[Authorize]
 
     public class PropietarioController : ApiBaseController
 {
@@ -94,6 +96,14 @@ namespace API.Controllers;
         await unitofwork.SaveAsync();
         return NoContent();
     }
-    
+    [HttpGet("mascotasXpropietarioGolden")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<object>> mascotasXpropietarioGolden()
+    {
+        var entidad = await unitofwork.Propietarios.mascotasXpropietarioGolden();
+        var dto = mapper.Map<IEnumerable<object>>(entidad);
+        return Ok(dto);
+    }
         
     }

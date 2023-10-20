@@ -6,7 +6,7 @@ using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 namespace API.Controllers;
-
+[Authorize]
     public class EspecieController : ApiBaseController
 {
     private readonly IUnitOfWork unitofwork;
@@ -43,7 +43,6 @@ namespace API.Controllers;
         return this.mapper.Map<EspecieDto>(especie);
     }
 
-    [Authorize(Roles = "Administrador")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

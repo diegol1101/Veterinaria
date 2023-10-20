@@ -4,6 +4,7 @@
 using API.Dtos;
 using API.Services;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -18,6 +19,7 @@ public class UserController : ApiBaseController
         _userService = userService;
     }
     [HttpPost("register")]
+    [Authorize(Roles = "Administrador")]
     public async Task<ActionResult> RegisterAsync(RegisterDto model)
     {
         var result = await _userService.RegisterAsync(model);
@@ -33,6 +35,7 @@ public class UserController : ApiBaseController
     }
 
     [HttpPost("addrole")]
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> AddRoleAsync(AddRoleDto model)
     {
         var result = await _userService.AddRoleAsync(model);
@@ -40,6 +43,7 @@ public class UserController : ApiBaseController
     }
 
     [HttpPost("refresh-token")]
+    [Authorize]
     public async Task<IActionResult> RefreshToken([FromBody] RefresTokenDto ss)
     {
         string RefrestToken = ss.refresToken;

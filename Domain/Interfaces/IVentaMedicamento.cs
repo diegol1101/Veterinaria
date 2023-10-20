@@ -8,5 +8,6 @@ namespace Domain.Interfaces;
 
     public interface IVentaMedicamento: IGenericRepository<VentaMedicamento>
     {
-        
+        Task<object> movimientoVenta();
+    
     }

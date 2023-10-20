@@ -29,5 +29,22 @@ namespace Application.Repository;
         return await _context.Proveedores
         .FirstOrDefaultAsync(p =>  p.Id == id);
     }
+    public async Task<object> medicamentoXProveedor()
+    {
+        var consulta = from m in _context.Medicinas
+        select new
+        {
+            Nombre = m.Nombre,
+            proveedores = (from mp in _context.Proveedores
+                        where m.ProveedorIdFk == mp.Id
+                        select new
+                        {
+                            NombreProveedor = mp.Nombre,
+                        }).ToList()
+        };
+
+        var propietariosConMascotas = await consulta.ToListAsync();
+        return propietariosConMascotas;
+    }
 
 }

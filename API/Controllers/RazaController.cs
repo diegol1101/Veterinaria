@@ -5,9 +5,11 @@ using API.Dtos;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
+[Authorize]
 
     public class RazaController : ApiBaseController
 {

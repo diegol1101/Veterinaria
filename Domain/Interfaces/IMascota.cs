@@ -10,4 +10,8 @@ namespace Domain.Interfaces;
     {
         Task<IEnumerable<Mascota>>GetMascotaEspecie();
         Task<IEnumerable<Mascota>>GetMascotaPopietario();
+        Task<IEnumerable<Mascota>> GetMascotaTrimMotivoAnio(int trim, string Motivo, int anio);
+        Task<object> mascotaXEspecie();
+        Task<object> mascotasXveterinario();
+        Task<object> mascotasXraza();
     }

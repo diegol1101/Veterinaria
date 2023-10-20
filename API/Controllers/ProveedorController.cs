@@ -6,9 +6,11 @@ using API.Dtos;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
+[Authorize]
 
     public class ProveedorController : ApiBaseController
 {
@@ -95,6 +97,14 @@ namespace API.Controllers;
         await unitofwork.SaveAsync();
         return NoContent();
     }
-    
+    [HttpGet("medicamentoXProveedor")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<object>> medicamentoXProveedor()
+    {
+        var entidad = await unitofwork.Proveedores.medicamentoXProveedor();
+        var dto = mapper.Map<IEnumerable<object>>(entidad);
+        return Ok(dto);
+    }
 
 }

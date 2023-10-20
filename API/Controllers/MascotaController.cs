@@ -4,9 +4,11 @@ using API.Dtos;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
+[Authorize]
 
     public class MascotaController : ApiBaseController
 {
@@ -113,5 +115,41 @@ namespace API.Controllers;
         var mascota = await unitofwork.Mascotas.GetMascotaPopietario();
         return mapper.Map<List<MascotaPropietarioDto>>(mascota);
     }
-    
+
+    [HttpGet("GetMascotaTrimMotivoAnio/{trim}/{motivo}/{anio}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
+    public async Task<ActionResult<IEnumerable<MascotaDto>>> GetMascotaTrimMotivoAnio(int trim, string motivo, int anio)
+    {
+        var mascota = await unitofwork.Mascotas.GetMascotaTrimMotivoAnio(trim, motivo, anio);
+        return mapper.Map<List<MascotaDto>>(mascota);
     }
+    [HttpGet("mascotaXEspecie")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<object>> mascotaXEspecie()
+    {
+        var entidad = await unitofwork.Mascotas.mascotaXEspecie();
+        var dto = mapper.Map<IEnumerable<object>>(entidad);
+        return Ok(dto);
+    }
+    [HttpGet("mascotasXveterinario")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<object>> mascotasXveterinario()
+    {
+        var entidad = await unitofwork.Mascotas.mascotasXveterinario();
+        var dto = mapper.Map<IEnumerable<object>>(entidad);
+        return Ok(dto);
+    }
+    [HttpGet("mascotasXraza")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<object>> mascotasXraza()
+    {
+        var entidad = await unitofwork.Mascotas.mascotasXraza();
+        var dto = mapper.Map<IEnumerable<object>>(entidad);
+        return Ok(dto);
+    }
+}
