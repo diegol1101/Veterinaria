@@ -1,2 +1,6 @@
 Id,Nombre,Stock,Precio,Laboratorio,ProveedorIdFk
-1,acetaminofen,50,1000,Genfar,1
+1,Omeprazol,50,2000,Genfar,1
+2,Bravecto,25,50000,farmalabs,3
+3,neguvon,35,52000,Genfar,2
+4,comegan,100,58000,megalabs,4
+5,Omega 3,45,65000,Genfar,2

@@ -29,4 +29,14 @@ namespace Application.Repository;
         return await _context.Veterinarios
         .FirstOrDefaultAsync(p =>  p.Id == id);
     }
+
+    public async Task<IEnumerable<Veterinario>> GetEspecialidad()
+    {
+        var Veterinarios = await _context.Veterinarios
+                            .Where(p=>p.Especialidad.ToLower()=="cirujano vascular").ToListAsync();
+
+        return Veterinarios;
+    }
 }
+
+

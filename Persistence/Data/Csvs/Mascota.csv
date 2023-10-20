@@ -1,0 +1,6 @@
+Id,Nombre,Nacimiento,PropietarioIdFk,RazaIdFk
+1,Tayson,2020-01-11T00:00:00,1,1
+2,Korra,2018-05-25T00:00:00,2,2
+3,Lola,2022-11-25T00:00:00,3,3
+4,Nico,2021-09-09T00:00:00,4,4
+5,Lulu,2023-01-28T00:00:00,1,6

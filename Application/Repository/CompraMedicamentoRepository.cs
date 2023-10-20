@@ -21,7 +21,6 @@ namespace Application.Repository;
     public override async Task<IEnumerable<CompraMedicamento>> GetAllAsync()
     {
         return await _context.CompraMedicamentos
-        .Include(p=>p.Proveedor)
         .Include(p=>p.Medicina)
         .ToListAsync();
     }
@@ -29,7 +28,6 @@ namespace Application.Repository;
     public override async Task<CompraMedicamento> GetByIdAsync(int id)
     {
         return await _context.CompraMedicamentos
-        .Include(p=>p.Proveedor)
         .Include(p=>p.Medicina)
         .FirstOrDefaultAsync(p =>  p.Id == id);
     }

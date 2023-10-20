@@ -11,7 +11,7 @@ using Persistence;
 namespace Persistence.Data.Migrations
 {
     [DbContext(typeof(VeterinariaContext))]
-    [Migration("20231017200200_FirstMigration")]
+    [Migration("20231019214653_FirstMigration")]
     partial class FirstMigration
     {
         /// <inheritdoc />
@@ -75,14 +75,9 @@ namespace Persistence.Data.Migrations
                         .HasColumnType("decimal(22,2)")
                         .HasColumnName("Precio");
 
-                    b.Property<int>("ProveedorIdFk")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("MedicinaIdFk");
-
-                    b.HasIndex("ProveedorIdFk");
 
                     b.ToTable("compramedicamento", (string)null);
                 });
@@ -426,6 +421,12 @@ namespace Persistence.Data.Migrations
                         .HasColumnType("varchar(150)")
                         .HasColumnName("email");
 
+                    b.Property<string>("Especialidad")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("especialidad");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -470,15 +471,7 @@ namespace Persistence.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Proveedor", "Proveedor")
-                        .WithMany("CompraMedicamentos")
-                        .HasForeignKey("ProveedorIdFk")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Medicina");
-
-                    b.Navigation("Proveedor");
                 });
 
             modelBuilder.Entity("Domain.Entities.Mascota", b =>
@@ -613,8 +606,6 @@ namespace Persistence.Data.Migrations
 
             modelBuilder.Entity("Domain.Entities.Proveedor", b =>
                 {
-                    b.Navigation("CompraMedicamentos");
-
                     b.Navigation("Medicinas");
                 });
 

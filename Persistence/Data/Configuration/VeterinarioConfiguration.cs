@@ -32,6 +32,11 @@ namespace Persistence.Data.Configuration;
                 .HasColumnName("email")
                 .IsRequired()
                 .HasMaxLength(150);
+
+                builder.Property(e => e.Especialidad)
+                .HasColumnName("especialidad")
+                .IsRequired()
+                .HasMaxLength(100);
             }
         }
     

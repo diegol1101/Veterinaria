@@ -33,5 +33,24 @@ namespace Application.Repository;
         .Include(p=>p.Raza)
         .FirstOrDefaultAsync(p =>  p.Id == id);
     }
-    
+
+    public async Task<IEnumerable<Mascota>> GetMascotaEspecie()
+    {
+        var Especies = await _context.Mascotas
+                        .Include(p=>p.Raza)
+                        .ThenInclude(p=>p.Especie)
+                        .Where(p=>p.Raza.Especie.Nombre.ToLower()=="felina").ToListAsync();
+
+                    return Especies;
+    }
+
+    public async Task<IEnumerable<Mascota>> GetMascotaPopietario()
+    {
+        var Propietarios = await _context.Mascotas
+                            .Include(p=>p.Propietario)
+                            .ToListAsync();
+
+                        return Propietarios;
+
+    }
 }

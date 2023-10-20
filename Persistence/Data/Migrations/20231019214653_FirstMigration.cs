@@ -113,6 +113,8 @@ namespace Persistence.Data.Migrations
                     telefono = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     email = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    especialidad = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -258,7 +260,6 @@ namespace Persistence.Data.Migrations
                     Cantidad = table.Column<int>(type: "int", nullable: false),
                     Precio = table.Column<decimal>(type: "decimal(22,2)", nullable: false),
                     Fecha_Compra = table.Column<DateTime>(type: "DateTime", nullable: false),
-                    ProveedorIdFk = table.Column<int>(type: "int", nullable: false),
                     MedicinaIdFk = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -268,12 +269,6 @@ namespace Persistence.Data.Migrations
                         name: "FK_compramedicamento_medicina_MedicinaIdFk",
                         column: x => x.MedicinaIdFk,
                         principalTable: "medicina",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_compramedicamento_proveedor_ProveedorIdFk",
-                        column: x => x.ProveedorIdFk,
-                        principalTable: "proveedor",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -378,11 +373,6 @@ namespace Persistence.Data.Migrations
                 name: "IX_compramedicamento_MedicinaIdFk",
                 table: "compramedicamento",
                 column: "MedicinaIdFk");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_compramedicamento_ProveedorIdFk",
-                table: "compramedicamento",
-                column: "ProveedorIdFk");
 
             migrationBuilder.CreateIndex(
                 name: "IX_mascota_PropietarioIdFk",

@@ -1,0 +1,4 @@
+Id,Dosis,Instruccion,Comentarios,CitaIdFk,MedicinaIdFk
+1,1,capsula al dia en ayunas,tratamiento por un mes,1,1
+2,1,capsula cada 4 meses,reacciones adversas comunicarse o acudir por urgencias,6,2
+3,1,poner collar y ajustar a la medida del cuello,uso de dos meses,1,3

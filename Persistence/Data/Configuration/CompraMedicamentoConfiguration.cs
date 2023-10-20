@@ -34,10 +34,6 @@ namespace Persistence.Data.Configuration;
                 .HasColumnType("DateTime")
                 .IsRequired();
 
-                builder.HasOne(p => p.Proveedor)
-                .WithMany(p => p.CompraMedicamentos)
-                .HasForeignKey(p => p.ProveedorIdFk);
-
                 builder.HasOne(p => p.Medicina)
                 .WithMany(p => p.CompraMedicamentos)
                 .HasForeignKey(p => p.MedicinaIdFk);

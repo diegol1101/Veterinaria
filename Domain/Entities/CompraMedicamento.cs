@@ -12,10 +12,7 @@ namespace Domain.Entities;
         public decimal Precio {get; set;}
         public DateTime Fecha {get; set;}
 
-
         /*llaves*/
-        public int ProveedorIdFk {get; set;}
-        public Proveedor Proveedor {get; set;}
 
         public int MedicinaIdFk {get; set;}
         public Medicina Medicina {get; set;}

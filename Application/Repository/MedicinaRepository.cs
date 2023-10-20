@@ -31,4 +31,20 @@ namespace Application.Repository;
         .Include(p=>p.Proveedor)
         .FirstOrDefaultAsync(p =>  p.Id == id);
     }
+
+    public async Task<IEnumerable<Medicina>> Getmedicamentolab()
+    {
+        var Medicina = await _context.Medicinas
+                            .Include(p=>p.Proveedor)
+                            .Where(p=>p.Laboratorio.ToLower()=="genfar").ToListAsync();
+                        return Medicina;
     }
+
+    public async Task<IEnumerable<Medicina>> GetMedicinaPrecio()
+    {
+        var Precio = await _context.Medicinas
+                        .Where(p=>p.Precio >= 50000).ToListAsync();
+
+                    return Precio;
+    }
+}

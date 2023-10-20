@@ -13,5 +13,4 @@ namespace Domain.Entities;
 
         /*llave*/
         public ICollection<Medicina> Medicinas {get; set;}
-        public ICollection<CompraMedicamento> CompraMedicamentos {get; set;}
     }
